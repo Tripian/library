@@ -6,11 +6,23 @@
 <head runat="server">
     <title></title>
 </head>
-<body>
+<body style="height: 474px">
     <form id="form1" runat="server">
-        <div>
-            <asp:Button ID="Button1" runat="server" Text="laylay" />
-            <asp:SqlDataSource ID="SqlDataSource1" runat="server"></asp:SqlDataSource>
+        <div style="height: 468px">
+            <br />
+            <br />
+            <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="Kullanıcıları Listele" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <asp:Button ID="Button2" runat="server" OnClick="Button2_Click" Text="Zaman Atla" />
+&nbsp;&nbsp;&nbsp;
+            <asp:TextBox ID="TextBox1" runat="server" MaxLength="8"></asp:TextBox>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <asp:Button ID="Button3" runat="server" OnClick="Button3_Click" Text="Kitap Ekle" />
+            <br />
+            <br />
+            <br />
+            <asp:GridView ID="GridView1" runat="server">
+            </asp:GridView>
         </div>
     </form>
 </body>
