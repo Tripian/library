@@ -51,7 +51,8 @@ namespace yazlab2._1
 
             if (connect == 1)
             {
-                Response.Redirect("~/Kullanıcı Paneli.aspx");
+                string kullanici_adi = TextBox1.Text;
+                Response.Redirect("~/Kullanıcı Paneli.aspx?kullanici_adi=" + kullanici_adi);
                 connect = 0;
             }
 

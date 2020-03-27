@@ -77,7 +77,7 @@ namespace yazlab2._1
 
                     if (kayit == 1)
                     {
-                        cmd.CommandText = "INSERT INTO users(kullanici,sifre) VALUES('" + TextBox1.Text + "' , '" + TextBox2.Text + "')";
+                        cmd.CommandText = "INSERT INTO users(kullanici,sifre,odunc) VALUES('" + TextBox1.Text + "' , '" + TextBox2.Text + "' , '0')";
                         cmd.ExecuteNonQuery();
                         cmd.Dispose();
                         baglanti.Close();

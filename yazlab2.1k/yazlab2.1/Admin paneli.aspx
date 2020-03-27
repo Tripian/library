@@ -23,6 +23,10 @@
             <br />
             <asp:GridView ID="GridView1" runat="server">
             </asp:GridView>
+            <br />
+            <br />
+            <br />
+            <asp:Button ID="Button4" runat="server" OnClick="Button4_Click" Text="Çıkış" />
         </div>
     </form>
 </body>
