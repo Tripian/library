@@ -43,6 +43,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="IronOcr, Version=4.4.0.21181, Culture=neutral, PublicKeyToken=5f366048dc436899, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronOcr.4.4.0\lib\net40\IronOcr.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -74,7 +77,6 @@
     </Content>
     <Content Include="Giriş.aspx" />
     <Content Include="Kayıt Ekranı.aspx" />
-    <Content Include="Kitap Ekleme Paneli.aspx" />
     <Content Include="Kullanıcı Paneli.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -100,13 +102,6 @@
     <Compile Include="Kayıt Ekranı.aspx.designer.cs">
       <DependentUpon>Kayıt Ekranı.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Kitap Ekleme Paneli.aspx.cs">
-      <DependentUpon>Kitap Ekleme Paneli.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Kitap Ekleme Paneli.aspx.designer.cs">
-      <DependentUpon>Kitap Ekleme Paneli.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Kullanıcı Paneli.aspx.cs">
       <DependentUpon>Kullanıcı Paneli.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -124,6 +119,9 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Images\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

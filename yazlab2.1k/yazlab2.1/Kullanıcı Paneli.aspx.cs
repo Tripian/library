@@ -6,6 +6,8 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using IronOcr;
+using System.Drawing;
 
 namespace yazlab2._1
 {
@@ -15,12 +17,13 @@ namespace yazlab2._1
         SqlConnection baglanti = new SqlConnection("Data Source=.\\SQLEXPRESS;Initial Catalog=veritabanim;User ID=sa;Password=123");
         int kirala, kiralik, gun;
         string kullanici;
+        int kayit = 0;
+        bool kontrol = false;
         protected void Page_Load(object sender, EventArgs e)
         {
             kullanici = Request.QueryString["kullanici_adi"];
-            Response.Write("<script>alert('"+kullanici+"')</script>");
         }
-
+        Bitmap image;
         protected void Button1_Click(object sender, EventArgs e)
         {
             if (baglanti.State == ConnectionState.Closed)
@@ -61,6 +64,100 @@ namespace yazlab2._1
             Response.Redirect("~/Giriş.aspx");
         }
 
+        protected void Button6_Click(object sender, EventArgs e)
+        {
+            if (FileUpload1.HasFile)
+            {
+
+                string extension = System.IO.Path.GetExtension(FileUpload1.FileName);
+                string path = Server.MapPath("Images\\");
+
+                FileUpload1.SaveAs(path + FileUpload1.FileName);
+                image = new Bitmap(path + FileUpload1.FileName);
+
+                var ocr = new AdvancedOcr()
+                {
+                    ReadBarCodes = true,
+                    Strategy = AdvancedOcr.OcrStrategy.Fast,
+                    InputImageType = AdvancedOcr.InputTypes.Document
+                };
+
+                var results = ocr.Read(image);
+
+                foreach (var Page in results.Pages)
+                {
+                    foreach (var Barcode in Page.Barcodes)
+                    {
+                        TextBox4.Text = Barcode.Value;
+                    }
+                }
+            }
+
+            else
+            {
+                Response.Write("<script>alert('Dosya seçilmedi!')</script>");
+            }
+        }
+
+        protected void Button7_Click(object sender, EventArgs e)
+        {
+            if (TextBox4.Text == "")
+            {
+
+                Response.Write("<script>alert('ISBN bulunamadı!')</script>");
+                TextBox4.Focus();
+
+            }
+
+            if (TextBox4.Text != "")
+            {
+                kontrol = true;
+            }
+
+            if (kontrol == true)
+            {
+                if (baglanti.State == ConnectionState.Closed)
+                {
+                    baglanti.Open();
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = baglanti;
+                    cmd.CommandText = "SELECT COUNT(*) FROM books WHERE ISBN like '" + TextBox4.Text + "' and kiralik = 0 ";
+                    Int32 count = (Int32)cmd.ExecuteScalar();
+
+                    if (count == 1)
+                    {
+                        Response.Write("<script>alert('Kitap zaten sizde değil!')</script>");
+                        TextBox4.Text = "";
+                    }
+
+                    else
+                    {
+                        kayit = 1;
+                    }
+
+                    if (kayit == 1)
+                    {
+                        cmd.CommandText = "UPDATE books SET kiralik=0 WHERE ISBN like '" + TextBox4.Text + "' ";
+                        cmd.ExecuteNonQuery();
+                        cmd.Dispose();
+
+                        cmd.CommandText = "SELECT kitap FROM books WHERE ISBN = '" + TextBox4.Text + "' ";
+                        string kitap = (string)cmd.ExecuteScalar();
+
+                        cmd.CommandText = "DELETE FROM odunc WHERE kitap = '" + kitap + "' ";
+                        cmd.ExecuteNonQuery();
+                        cmd.Dispose();
+
+                        baglanti.Close();
+                        kayit = 0;
+                        TextBox4.Text = "";
+                    }
+
+                }
+            }
+
+        }
+
         protected void Button3_Click(object sender, EventArgs e)
         {
             if (baglanti.State == ConnectionState.Closed)
@@ -93,7 +190,7 @@ namespace yazlab2._1
                 cmd.CommandText = "SELECT COUNT(*) FROM odunc WHERE kullanici like '" + kullanici + "'  ";
                 kiralik = (Int32)cmd.ExecuteScalar();
 
-                cmd.CommandText = "SELECT COUNT(*) FROM books WHERE kitap like '" + TextBox3.Text + "' and kiralik=0 ";
+                cmd.CommandText = "SELECT COUNT(*) FROM books WHERE kitap like '" + TextBox3.Text + "' and kiralik = 0 ";
                 kirala = (Int32)cmd.ExecuteScalar();
 
                 if (kirala == 1 && kiralik < 3 && gun == 0)
@@ -108,6 +205,7 @@ namespace yazlab2._1
 
                     baglanti.Close();
                     kirala = 0;
+                    TextBox3.Text = "";
                 }
 
                 else if (gun != 0)
